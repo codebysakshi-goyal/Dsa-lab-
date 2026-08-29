@@ -1,0 +1,55 @@
+#include <iostream>
+#include <stack>
+#include <string>
+using namespace std;
+
+int precedence(char op) {
+    if (op == '+' || op == '-') return 1;
+    if (op == '*' || op == '/') return 2;
+    if (op == '^') return 3;
+    return 0; 
+}
+
+void infixToPostfix(string infix) {
+    stack<char> s;
+    string postfix = "";
+
+    for (int i = 0; i < infix.length(); i++) {
+        char ch = infix[i];
+        if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9')) {
+            postfix += ch;
+        }
+        else if (ch == '(') {
+            s.push(ch);
+        }
+
+        else if (ch == ')') {
+            while (!s.empty() && s.top() != '(') {
+                postfix += s.top();
+                s.pop();
+            }
+            if (!s.empty()) s.pop(); // Pop the '(' out of stack
+        }
+        
+        else {
+            while (!s.empty() && precedence(s.top()) >= precedence(ch)) {
+                postfix += s.top();
+                s.pop();
+            }
+            s.push(ch); // Push current operator to stack
+        }
+    }
+    while (!s.empty()) {
+        postfix += s.top();
+        s.pop();
+    }
+
+    cout << "Postfix Expression: " << postfix << endl;
+}
+
+int main() {
+    string expr = "a+b*(c^d-e)";
+    cout << "Infix Expression: " << expr << endl;
+    infixToPostfix(expr);
+    return 0;
+}
