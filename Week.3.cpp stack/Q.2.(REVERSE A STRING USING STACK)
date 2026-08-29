@@ -1,0 +1,26 @@
+#include <iostream>
+#include <stack>
+#include <string>
+using namespace std;
+
+void reverseString(string str) {
+    stack<char> s;
+    for (int i = 0; i < str.length(); i++) {
+        s.push(str[i]);
+    }
+
+    string reversedStr = "";
+    while (!s.empty()) {
+        reversedStr += s.top(); 
+        s.pop();                
+    }
+
+    cout << "Original String: " << str << endl;
+    cout << "Reversed String: " << reversedStr << endl;
+}
+
+int main() {
+    string text = "DataStructure";
+    reverseString(text);
+    return 0;
+}
