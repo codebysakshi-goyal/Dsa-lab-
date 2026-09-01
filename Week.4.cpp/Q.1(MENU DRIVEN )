@@ -1,0 +1,41 @@
+#include<iostream>
+using namespace std;
+int q[100], front = -1 , rear = -1 , n = 5;
+int main(){
+    int ch , val ;
+    while(1){
+        cout<<" \n 1.enqueue 2.dequeue 3.display 4.peek 5.exit \n ";
+        cout<<"choice : ";
+        cin>>ch;
+
+        if(ch==1){
+            if(rear == n-1) cout<< "full\n";
+            else{
+                cout<< " enter val : ";
+                cin >> val;
+                if(front == -1) front =0 ;
+                q[++rear]= val;
+            }
+        }
+        else if (ch == 2){
+            if(front == -1 ) cout<< "empty \n";
+            else{
+                cout<<q[front]<<" removed\n";
+                if(front==rear) front=rear=-1;
+                else front++;
+            }
+        }
+        else if(ch==3){
+            if(front==-1) cout<<"Empty\n";
+            else{
+                for(int i=front;i<=rear;i++) cout<<q[i]<<" ";
+                cout<<"\n";
+            }
+        }
+        else if(ch==4){
+            if(front==-1) cout<<"Empty\n";
+            else cout<<q[front]<<"\n";
+        }
+        else if(ch==5) break;
+    }
+}
