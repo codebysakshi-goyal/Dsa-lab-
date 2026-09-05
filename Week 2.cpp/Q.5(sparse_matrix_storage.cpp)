@@ -1,0 +1,63 @@
+#include <iostream>
+using namespace std;
+
+// Compact 1D storage formulas for square matrices.
+// For n x n matrices, only the required elements are stored.
+
+// (a) Diagonal: store A[i][i] at index i.
+int diagonalIndex(int i) {
+    return i;
+}
+
+// (b) Tri-diagonal: stores A[i][j] only when |i-j| <= 1.
+// 0-based indexing.
+int triDiagonalIndex(int i, int j, int n) {
+    if (i - j == 1) return i - 1;             // lower diagonal
+    if (i == j) return (n - 1) + i;           // main diagonal
+    if (j - i == 1) return (2 * n - 1) + i;   // upper diagonal
+    return -1;
+}
+
+// (c) Lower triangular: row-major compact storage.
+// Valid when i >= j.
+int lowerTriangularIndex(int i, int j) {
+    if (i < j) return -1;
+    return i * (i + 1) / 2 + j;
+}
+
+// (d) Upper triangular: row-major compact storage.
+// Valid when i <= j.
+int upperTriangularIndex(int i, int j, int n) {
+    if (i > j) return -1;
+    return i * n - (i * (i - 1)) / 2 + (j - i);
+}
+
+// (e) Symmetric: store only the lower triangle.
+// Valid when i >= j.
+int symmetricIndex(int i, int j) {
+    if (i < j) swap(i, j);
+    return i * (i + 1) / 2 + j;
+}
+
+int main() {
+    int n = 4;
+
+    cout << "For a " << n << " x " << n << " matrix:" << endl;
+    cout << "Diagonal elements stored: " << n << endl;
+    cout << "Tri-diagonal elements stored: " << 3 * n - 2 << endl;
+    cout << "Lower triangular elements stored: " << n * (n + 1) / 2 << endl;
+    cout << "Upper triangular elements stored: " << n * (n + 1) / 2 << endl;
+    cout << "Symmetric matrix: store only " << n * (n + 1) / 2
+         << " elements" << endl;
+
+    return 0;
+}
+
+/*
+For n x n matrices:
+Diagonal: n elements instead of n^2
+Tri-diagonal: 3n - 2 elements
+Lower triangular: n(n+1)/2 elements
+Upper triangular: n(n+1)/2 elements
+Symmetric: n(n+1)/2 elements
+*/
