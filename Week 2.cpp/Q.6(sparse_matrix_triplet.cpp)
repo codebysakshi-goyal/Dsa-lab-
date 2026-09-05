@@ -1,0 +1,124 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+struct Term {
+    int row, col, value;
+};
+
+struct SparseMatrix {
+    int rows, cols;
+    vector<Term> terms;
+};
+
+SparseMatrix transpose(const SparseMatrix& A) {
+    SparseMatrix T{A.cols, A.rows, {}};
+
+    // Simple transpose: scan columns in increasing order.
+    for (int c = 0; c < A.cols; c++) {
+        for (const auto& x : A.terms) {
+            if (x.col == c)
+                T.terms.push_back({x.col, x.row, x.value});
+        }
+    }
+
+    return T;
+}
+
+SparseMatrix add(const SparseMatrix& A, const SparseMatrix& B) {
+    if (A.rows != B.rows || A.cols != B.cols)
+        return {-1, -1, {}};
+
+    SparseMatrix C{A.rows, A.cols, {}};
+    size_t i = 0, j = 0;
+
+    while (i < A.terms.size() && j < B.terms.size()) {
+        const auto& a = A.terms[i];
+        const auto& b = B.terms[j];
+
+        if (a.row == b.row && a.col == b.col) {
+            int sum = a.value + b.value;
+            if (sum != 0)
+                C.terms.push_back({a.row, a.col, sum});
+            i++;
+            j++;
+        } else if (a.row < b.row || (a.row == b.row && a.col < b.col)) {
+            C.terms.push_back(a);
+            i++;
+        } else {
+            C.terms.push_back(b);
+            j++;
+        }
+    }
+
+    while (i < A.terms.size()) C.terms.push_back(A.terms[i++]);
+    while (j < B.terms.size()) C.terms.push_back(B.terms[j++]);
+
+    return C;
+}
+
+SparseMatrix multiply(const SparseMatrix& A, const SparseMatrix& B) {
+    if (A.cols != B.rows)
+        return {-1, -1, {}};
+
+    // Accumulate only non-zero results in a dense temporary array.
+    vector<vector<int>> result(A.rows, vector<int>(B.cols, 0));
+
+    for (const auto& a : A.terms) {
+        for (const auto& b : B.terms) {
+            if (a.col == b.row)
+                result[a.row][b.col] += a.value * b.value;
+        }
+    }
+
+    SparseMatrix C{A.rows, B.cols, {}};
+
+    for (int i = 0; i < C.rows; i++) {
+        for (int j = 0; j < C.cols; j++) {
+            if (result[i][j] != 0)
+                C.terms.push_back({i, j, result[i][j]});
+        }
+    }
+
+    return C;
+}
+
+void printTriplet(const SparseMatrix& A) {
+    if (A.rows == -1) {
+        cout << "Operation not possible due to incompatible dimensions.\n";
+        return;
+    }
+
+    cout << "Rows: " << A.rows << ", Columns: " << A.cols
+         << ", Non-zero terms: " << A.terms.size() << "\n";
+    cout << "Row Col Value\n";
+
+    for (const auto& x : A.terms)
+        cout << x.row << "   " << x.col << "   " << x.value << "\n";
+}
+
+int main() {
+    SparseMatrix A{
+        3, 3,
+        {{0, 0, 1}, {0, 2, 2}, {1, 1, 3}, {2, 0, 4}}
+    };
+
+    SparseMatrix B{
+        3, 3,
+        {{0, 1, 5}, {1, 1, 2}, {2, 2, 6}}
+    };
+
+    cout << "A:\n";
+    printTriplet(A);
+
+    cout << "\nTranspose of A:\n";
+    printTriplet(transpose(A));
+
+    cout << "\nA + B:\n";
+    printTriplet(add(A, B));
+
+    cout << "\nA * B:\n";
+    printTriplet(multiply(A, B));
+
+    return 0;
+}
