@@ -1,0 +1,62 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include <cctype>
+#include <vector>
+using namespace std;
+
+// (a) Concatenate one string to another.
+string concatenateStrings(string a, const string& b) {
+    a += b;
+    return a;
+}
+
+// (b) Reverse a string.
+string reverseString(string s) {
+    reverse(s.begin(), s.end());
+    return s;
+}
+
+// (c) Delete all vowels.
+string removeVowels(const string& s) {
+    string result;
+
+    for (char ch : s) {
+        char c = static_cast<char>(tolower(static_cast<unsigned char>(ch)));
+        if (c != 'a' && c != 'e' && c != 'i' && c != 'o' && c != 'u')
+            result += ch;
+    }
+
+    return result;
+}
+
+// (d) Sort strings alphabetically.
+void sortStrings(vector<string>& strings) {
+    sort(strings.begin(), strings.end());
+}
+
+// (e) Convert a character from uppercase to lowercase.
+char toLowerChar(char ch) {
+    return static_cast<char>(tolower(static_cast<unsigned char>(ch)));
+}
+
+int main() {
+    string a = "Hello ";
+    string b = "World";
+
+    cout << "(a) Concatenated: " << concatenateStrings(a, b) << endl;
+    cout << "(b) Reversed: " << reverseString("Data Structures") << endl;
+    cout << "(c) Without vowels: " << removeVowels("Data Structures") << endl;
+
+    vector<string> words = {"Banana", "Apple", "Mango", "Cherry"};
+    sortStrings(words);
+
+    cout << "(d) Alphabetical order: ";
+    for (const string& word : words)
+        cout << word << " ";
+    cout << endl;
+
+    cout << "(e) Lowercase: " << toLowerChar('G') << endl;
+
+    return 0;
+}
