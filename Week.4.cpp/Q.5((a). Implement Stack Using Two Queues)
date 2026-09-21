@@ -1,0 +1,82 @@
+#include <iostream>
+#include <queue>
+using namespace std;
+queue<int> q1, q2;
+void push(int value)
+{
+    q2.push(value);
+    while (!q1.empty())
+    {
+        q2.push(q1.front());
+        q1.pop();
+    }
+    swap(q1, q2);
+    cout << "Element pushed\n";
+}
+void pop()
+{
+    if (q1.empty())
+    {
+        cout << "Stack is Empty\n";
+    }
+    else
+    {
+        cout << "Popped element: " << q1.front() << endl;
+        q1.pop();
+    }
+}
+
+void display()
+{
+    if (q1.empty())
+    {
+        cout << "Stack is Empty\n";
+        return;
+    }
+    queue<int> temp = q1;
+    cout << "Stack: ";
+    while (!temp.empty())
+    {
+        cout << temp.front() << " ";
+        temp.pop();
+    }
+    cout << endl;
+}
+int main()
+{
+    int choice, value;
+    do
+    {
+        cout << "\n--- STACK USING TWO QUEUES ---\n";
+        cout << "1. Push\n";
+        cout << "2. Pop\n";
+        cout << "3. Display\n";
+        cout << "4. Exit\n";
+
+        cout << "Enter choice: ";
+        cin >> choice;
+
+        switch (choice)
+        {
+        case 1:
+            cout << "Enter value: ";
+            cin >> value;
+            push(value);
+            break;
+        case 2:
+            pop();
+            break;
+        case 3:
+            display();
+            break;
+        case 4:
+            cout << "Program ended\n";
+            break;
+        default:
+            cout << "Invalid choice\n";
+        }
+
+    } while (choice != 4);
+
+    return 0;
+}
