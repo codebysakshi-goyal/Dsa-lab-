@@ -1,0 +1,30 @@
+#include <iostream>
+#include <queue>
+using namespace std;
+
+int main()
+{
+    string str;
+    cout << "Enter a string: ";
+    cin >> str;
+    int frequency[256] = {0};
+    queue<char> q;
+    for (int i = 0; i < str.length(); i++)
+    {
+        frequency[str[i]]++;
+        q.push(str[i]);
+    }
+    while (!q.empty())
+    {
+        char ch = q.front();
+        q.pop();
+
+        if (frequency[ch] == 1)
+        {
+            cout << "First non-repeating character: " << ch;
+            return 0;
+        }
+    }
+    cout << "No non-repeating character found";
+    return 0;
+}
